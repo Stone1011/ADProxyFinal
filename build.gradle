@@ -1,0 +1,50 @@
+// Top-level build file where you can add configuration options common to all sub-projects/modules.
+
+buildscript {
+    repositories {
+        google()
+        jcenter()
+        gradlePluginPortal()
+    }
+    dependencies {
+        classpath Libs.com_android_tools_build_gradle
+        classpath Libs.kotlin_gradle_plugin
+        classpath Libs.de_fayard_buildsrcversions_gradle_plugin
+        classpath Libs.detekt_gradle_plugin
+        classpath Libs.hilt_android_gradle_plugin
+        classpath Libs.gradle_android_junit_jacoco_plugin
+    }
+}
+
+//plugins {
+//    id 'com.android.application' version '7.2.1' apply false
+//    id 'com.android.library' version '7.2.1' apply false
+////    id 'de.fayard.buildSrcVersions'
+//}
+
+apply plugin: "de.fayard.buildSrcVersions"
+
+allprojects {
+    repositories {
+        google()
+        jcenter()
+    }
+}
+
+subprojects {
+    apply plugin: "io.gitlab.arturbosch.detekt"
+
+    detekt {
+        toolVersion = Versions.io_gitlab_arturbosch_detekt
+        config = files("$rootDir/detekt.yml")
+        buildUponDefaultConfig = true
+    }
+
+    dependencies {
+        detektPlugins Libs.detekt_formatting
+    }
+}
+
+task clean(type: Delete) {
+    delete rootProject.buildDir
+}
