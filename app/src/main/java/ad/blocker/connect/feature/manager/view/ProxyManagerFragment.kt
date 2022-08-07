@@ -1,6 +1,9 @@
 package ad.blocker.connect.feature.manager.view
 
 import ad.blocker.MainActivity
+import ad.blocker.R
+import ad.blocker.connect.feature.manager.viewmodel.ProxyManagerViewModel
+import ad.blocker.databinding.FragmentProxyManagerBinding
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,9 +12,6 @@ import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import ad.blocker.R
-import ad.blocker.databinding.FragmentProxyManagerBinding
-import ad.blocker.connect.feature.manager.viewmodel.ProxyManagerViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -53,7 +53,8 @@ class ProxyManagerFragment : Fragment() {
 
     private fun observeProxyState() {
         viewModel.proxyState.observe(viewLifecycleOwner, Observer { proxyState ->
-            when (proxyState) {
+            when (proxyState)
+            {
                 is ProxyState.Enabled -> showProxyEnabled(proxyState.address, proxyState.port)
                 is ProxyState.Disabled -> showProxyDisabled()
             }
@@ -76,9 +77,12 @@ class ProxyManagerFragment : Fragment() {
 
     private fun showProxyEnabled(proxyAddress: String, proxyPort: String) {
         hideErrors()
-        with(binding) {
+        with(binding)
+        {
             inputLayoutAddress.editText?.setText(proxyAddress)
             inputLayoutPort.editText?.setText(proxyPort)
+            rulesPath.setText("/storage/emulated/0/Download/rules.txt")
+
             inputLayoutAddress.isEnabled = false
             inputLayoutPort.isEnabled = false
             status.text = getString(R.string.proxy_status_enabled)
@@ -89,7 +93,20 @@ class ProxyManagerFragment : Fragment() {
                 viewModel.disableProxy()
             }
 
-            MainActivity.startProxy(context, Integer.parseInt(proxyPort))
+            val path = rulesPath.text.toString()
+//            Log.e("rules", path)
+            var success = MainActivity.filter.init(path)
+            if(!success)
+            {
+//                showInvalidPathError()
+                val dialog = AlertDialog.Builder(MainActivity.context)
+                    .setTitle("Warning")
+                    .setMessage(R.string.error_invalid_path)
+                    .setCancelable(true).create()
+                dialog.show()
+            }
+            else
+                MainActivity.startProxy(context, Integer.parseInt(proxyPort))
         }
     }
 
@@ -100,9 +117,10 @@ class ProxyManagerFragment : Fragment() {
                 inputLayoutAddress.editText?.setText(lastUsedProxy.address)
                 inputLayoutPort.editText?.setText(lastUsedProxy.port)
             }
-            inputLayoutAddress.isEnabled = true
+            inputLayoutAddress.isEnabled = false
             inputLayoutPort.isEnabled = true
             status.text = getString(R.string.proxy_status_disabled)
+            rulesPath.setText("/storage/emulated/0/Download/rules.txt")
             toggle.isActivated = false
             status.isActivated = false
             toggle.contentDescription = getString(R.string.a11y_enable_proxy)
@@ -125,6 +143,13 @@ class ProxyManagerFragment : Fragment() {
     private fun showInvalidPortError() {
         binding.inputLayoutPort.apply {
             error = getString(R.string.error_invalid_port)
+            requestFocusFromTouch()
+        }
+    }
+
+    private fun showInvalidPathError() {
+        binding.inputLayoutPath.apply {
+            error = getString(R.string.error_invalid_path)
             requestFocusFromTouch()
         }
     }

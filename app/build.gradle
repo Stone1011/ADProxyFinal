@@ -89,4 +89,4 @@ dependencies {
     kapt Libs.hilt_compiler
 }
 
-preBuild.dependsOn('detekt')
+//preBuild.dependsOn('detekt')

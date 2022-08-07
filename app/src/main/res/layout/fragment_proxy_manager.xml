@@ -19,13 +19,14 @@
         app:layout_constraintTop_toBottomOf="@+id/linearLayout">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/editTextNumber"
+            android:id="@+id/rulesPath"
             style="@style/Input"
             android:layout_width="316dp"
-            android:layout_height="56dp"
+            android:layout_height="75dp"
             android:layout_marginStart="44dp"
             android:layout_marginTop="14dp"
             android:inputType="text"
+            android:textSize="14sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
 
