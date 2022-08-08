@@ -40,6 +40,7 @@ public class Filter
             {
                 if(line.isEmpty())
                 {
+                    line = reader.readLine();
                     continue;
                 }
 

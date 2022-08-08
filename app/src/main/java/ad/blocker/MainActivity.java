@@ -30,6 +30,7 @@ import java.security.NoSuchAlgorithmException;
 import javax.net.ssl.SSLContext;
 
 import ad.blocker.connect.feature.manager.view.ProxyManagerFragment;
+import ad.blocker.connect.feature.manager.viewmodel.ProxyManagerViewModel;
 import ad.blocker.filter.Filter;
 import ad.blocker.proxy.crt.CertUtilsLoader;
 import ad.blocker.proxy.intercept.HttpProxyInterceptInitializer;
@@ -49,6 +50,7 @@ public class MainActivity extends AppCompatActivity
 {
     public static Filter filter = new Filter();
     public static Context context;
+    public static boolean first = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -64,16 +66,6 @@ public class MainActivity extends AppCompatActivity
         {
             showPermissionRequiredDialog();
         }
-        else if (perm == PackageManager.PERMISSION_GRANTED)
-        {
-            showApplicationContent(savedInstanceState);
-        }
-
-        perm = ContextCompat.checkSelfPermission(this, READ_EXTERNAL_STORAGE);
-        if (perm == PackageManager.PERMISSION_DENIED)
-        {
-            showStoragePermissionRequiredDialog();
-        }
 
         if (Build.VERSION.SDK_INT>=23&& ContextCompat.checkSelfPermission(MainActivity.this, WRITE_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED)
         {
@@ -87,6 +79,12 @@ public class MainActivity extends AppCompatActivity
             if(!Environment.isExternalStorageManager()){
                 startActivity(new Intent(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION));
             }
+        }
+
+        perm = ContextCompat.checkSelfPermission(this, READ_EXTERNAL_STORAGE);
+        if (perm == PackageManager.PERMISSION_DENIED)
+        {
+            showStoragePermissionRequiredDialog();
         }
 
         try
@@ -106,6 +104,8 @@ public class MainActivity extends AppCompatActivity
         {
             e.printStackTrace();
         }
+
+        showApplicationContent(savedInstanceState);
     }
 
     private void showPermissionRequiredDialog()
@@ -203,6 +203,7 @@ public class MainActivity extends AppCompatActivity
                             int size = httpResponse.content().readableBytes();
                             byte [] content = new byte[size];
                             httpResponse.content().readBytes(content);
+                            String str = new String(content);
                             byte [] modified;
                             modified = modifyResponse(content, query.second);
                             String modifiedStr = new String(modified);

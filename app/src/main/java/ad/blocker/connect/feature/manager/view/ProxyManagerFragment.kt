@@ -75,10 +75,21 @@ class ProxyManagerFragment : Fragment() {
         binding.themeMode.setOnClickListener { viewModel.toggleTheme() }
     }
 
+    private fun disableProxy() {
+        MainActivity.first = false
+        viewModel.disableProxy()
+    }
+
     private fun showProxyEnabled(proxyAddress: String, proxyPort: String) {
         hideErrors()
         with(binding)
         {
+            if(MainActivity.first)
+            {
+                disableProxy()
+                return
+            }
+
             inputLayoutAddress.editText?.setText(proxyAddress)
             inputLayoutPort.editText?.setText(proxyPort)
             rulesPath.setText("/storage/emulated/0/Download/rules.txt")
