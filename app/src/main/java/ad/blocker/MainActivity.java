@@ -120,7 +120,7 @@ public class MainActivity extends AppCompatActivity
     {
         AlertDialog dialog = new AlertDialog.Builder(this).setTitle("Storage Permission Required").
                 setMessage("Storage Permission Required").
-                setCancelable(false).create();
+                setCancelable(true).create();
         dialog.show();
     }
 

@@ -16,8 +16,8 @@ import java.util.Vector;
 
 public class Filter
 {
-    public final String scriptStart = "<script>\nwindow.onload = function() {\n";
-    public final String scriptEnd = "}\n</script>\n";
+    public final String scriptStart = "<script>\nfunction AD_Proxy_block() {\n";
+    public final String scriptEnd = "}\nwindow.addEventListener('load', AD_Proxy_block); \ndocument.addEventListener('DOMSubtreeModified', AD_Proxy_block); \n</script>\n";
 
     private Set <BlackElem> blackLists;
     private Set <RuleElem> rules;
