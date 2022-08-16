@@ -163,7 +163,7 @@ public class Filter
                 protocol = "||";
                 URL = line.substring(2);
             }
-            else if(isLetter(line.charAt(0)))
+            else if(isLetter(line.charAt(0)) || isDigit(line.charAt(0)))
             {
                 type = BlackType.GENERAL;
                 protocol = null;
